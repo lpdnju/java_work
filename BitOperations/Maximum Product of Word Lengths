@@ -1,0 +1,43 @@
+/*Given a string array words, find the maximum value of length(word[i]) * length(word[j]) where the two words do not share common letters. You may assume that each word will contain only lower case letters. If no such two words exist, return 0.
+Example 1:
+Given ["abcw", "baz", "foo", "bar", "xtfn", "abcdef"]
+Return 16
+The two words can be "abcw", "xtfn".
+Example 2:
+Given ["a", "ab", "abc", "d", "cd", "bcd", "abcd"]
+Return 4
+The two words can be "ab", "cd".
+Example 3:
+Given ["a", "aa", "aaa", "aaaa"]
+Return 0
+No such pair of words.
+*/
+//思路: 因为只会出现26个字母,我们用一个32位的int mask来表示，若a出现过，则mask[0]=1;若c出现过，则mask[2]=1;
+	public class Solution {
+	    public int maxProduct(String[] words) {
+	        if(words.length < 2){
+	            return 0;
+	        }
+	        int[][] cmp = new int[words.length][2];
+	        int result = 0;
+	        for(int i = 0; i < words.length; i++){
+	            cmp[i][0] = getmask(words[i]);
+	            cmp[i][1] = words[i].length();
+	        }
+	        for(int i = 0; i < cmp.length; i++){
+	            for(int j = i+1; j < cmp.length; j++){
+	                if((cmp[i][0] & cmp[j][0]) == 0){
+	                    result = Math.max(result,cmp[i][1]*cmp[j][1]);
+	                }
+	            }
+	        }
+	        return result;
+	    }
+	    public int getmask(String s){
+	        int mask = 0;
+	        for(int i = 0; i < s.length(); i++){
+	            mask |= 1 << (s.charAt(i)-'a');
+	        }
+	        return mask;
+	    }
+	}
