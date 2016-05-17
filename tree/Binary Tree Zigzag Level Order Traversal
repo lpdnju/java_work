@@ -1,0 +1,71 @@
+/*Given a binary tree, return the zigzag level order traversal of its nodes' values. (ie, from left to right, then right to left for the next level and alternate between).
+For example:
+Given binary tree {3,9,20,#,#,15,7},
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its zigzag level order traversal as:
+[
+  [3],
+  [20,9],
+  [15,7]
+]
+*/
+//思路：
+
+//利用BFS和栈来实现。
+	/**
+	 * Definition for a binary tree node.
+	 * public class TreeNode {
+	 *     int val;
+	 *     TreeNode left;
+	 *     TreeNode right;
+	 *     TreeNode(int x) { val = x; }
+	 * }
+	 */
+	public class Solution {
+	    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+	        List<List<Integer>> res = new ArrayList<List<Integer>>();
+	        if(root == null){
+	            return res;
+	        }
+	        Stack<TreeNode> curr = new Stack<TreeNode>();
+	        Stack<TreeNode> next = new Stack<TreeNode>();
+	        List<Integer> numberList = new ArrayList<Integer>();
+	        int level = 1;
+	        curr.push(root);
+	        while(!curr.empty()){
+	            TreeNode head = curr.pop();
+	            
+	            numberList.add(head.val);
+	            if(level%2 == 1){
+	                if(head.left != null){
+	                next.push(head.left);
+	                }
+	                if(head.right != null){
+	                    next.push(head.right);
+	                }
+	            }else{
+	                if(head.right != null){
+	                    next.push(head.right);
+	                }
+	                if(head.left != null){
+	                next.push(head.left);
+	                }
+	            }
+	            
+	            
+	            if(curr.empty()){
+	                curr = next;
+	                next = new Stack<TreeNode>();
+	                res.add(numberList);
+	                numberList = new ArrayList<Integer>();
+	                level++;
+	            }
+	            
+	        }
+	        return res;
+	    }
+	}
