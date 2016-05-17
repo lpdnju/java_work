@@ -1,0 +1,119 @@
+//Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
+//For example,
+//Given [3,2,1,5,6,4] and k = 2, return 5.
+//Note: 
+//You may assume k is always valid, 1 ≤ k ≤ array's length.
+//思路1：利用快速排序的思路。
+		public class Solution {
+		   public int findKthLargest(int[] nums, int k) {
+			if (k < 1 || nums == null) {
+				return 0;
+			}
+		 
+			return getKth(nums.length - k +1, nums, 0, nums.length - 1);//第nums.length-k+1小的数
+		}
+		 
+		public int getKth(int k, int[] nums, int start, int end) {
+		 
+			int pivot = nums[end];
+		 
+			int left = start;
+			int right = end;
+		 
+			while (true) {
+		 
+				while (nums[left] < pivot && left < right) {
+					left++;
+				}
+		 
+				while (nums[right] >= pivot && right > left) {
+					right--;
+				}
+		 
+				if (left == right) {
+					break;
+				}
+		 
+				swap(nums, left, right);
+			}
+		 
+			swap(nums, left, end);
+		 
+			if (k == left + 1) {
+				return pivot;
+			} else if (k < left + 1) {
+				return getKth(k, nums, start, left - 1);
+			} else {
+				return getKth(k, nums, left + 1, end);
+			}
+		}
+		 
+		public void swap(int[] nums, int n1, int n2) {
+			int tmp = nums[n1];
+			nums[n1] = nums[n2];
+			nums[n2] = tmp;
+		}
+		}
+//思路2：利用堆排序
+ private static void GetSmallerNumbers(int[] array, int count)
+        {
+            BuildMinHeap(array);    //创建小顶推
+            for (int i = array.Length - 1; i >= array.Length - count; i--)  //遍历小顶推
+            {
+                Console.WriteLine(array[0]);    //输出最顶端的跟元素（即：此时堆中最小的数）
+                Swap(ref array[0], ref array[i]);   //将堆顶最小的元素与堆中最后的一个元素交换
+                MinHeapify(array, 0, i);    //重新调整为小顶推
+            }
+        }
+
+        /// <summary>
+        /// 创建小根堆
+        /// </summary>
+        /// <param name="array">传递的数组</param>
+        private static void BuildMinHeap(int[] array)
+        {
+            //根据堆与数组的关系可知：下标从 0 ~ array.Length / 2 - 1 的数组元素为根节点，其余元素都为叶节点
+            for (int i = array.Length / 2 - 1; i >= 0; i--)
+            {
+                MinHeapify(array, i, array.Length); //调整为小顶推
+            }
+        }
+
+        /// <summary>
+        /// 从底向上：调整小根堆的过程
+        /// </summary>
+        /// <param name="array">传递的数组</param>
+        /// <param name="currentIndex">需要调整的当前根节点</param>
+        /// <param name="heapSize">此时小顶堆的大小（即：处在小顶堆中所有的数组元素个数）</param>
+        private static void MinHeapify(int[] array, int currentIndex, int heapSize)
+        {
+            int leftChildIndex = currentIndex * 2 + 1;  //此根节点的左子节点下标
+            int rightChildIndex = currentIndex * 2 + 2; //此根节点的右子节点下标
+            int smallestIndex = currentIndex;   //三者（根节点、左子节点、右子节点）之中最小元素的下标
+            if (leftChildIndex < heapSize && array[leftChildIndex] < array[smallestIndex])
+            {
+                smallestIndex = leftChildIndex;
+            }
+            if (rightChildIndex < heapSize && array[rightChildIndex] < array[smallestIndex])
+            {
+                smallestIndex = rightChildIndex;
+            }
+            if (smallestIndex != currentIndex)  //左右子节点中存在小于根节点元素的情况
+            {
+                Swap(ref array[currentIndex], ref array[smallestIndex]);
+                MinHeapify(array, smallestIndex, array.Length); //递归调整
+            }
+        }
+
+        /// <summary>
+        /// 交换函数
+        /// </summary>
+        /// <param name="a">元素a</param>
+        /// <param name="b">元素b</param>
+        private static void Swap(ref int a, ref int b)
+        {
+            int temp = 0;
+            temp = a;
+            a = b;
+            b = temp;
+        }
