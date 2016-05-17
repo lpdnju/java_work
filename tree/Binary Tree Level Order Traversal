@@ -1,0 +1,64 @@
+/*Given a binary tree, return the level order traversal of its nodes' values. (ie, from left to right, level by level).
+For example:
+Given binary tree {3,9,20,#,#,15,7},
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its level order traversal as:
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+*/
+//思路：
+//	BFS实现树的遍历。
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> result=new ArrayList<List<Integer>>();
+        if(root == null){
+        return result;
+        }
+ 
+    LinkedList<TreeNode> current = new LinkedList<TreeNode>();
+    LinkedList<TreeNode> next = new LinkedList<TreeNode>();
+    current.offer(root);
+ 
+    ArrayList<Integer> numberList = new ArrayList<Integer>();
+ 
+    // 遍历
+    while(!current.isEmpty()){
+        TreeNode head = current.poll();
+ 
+        numberList.add(head.val);
+ 
+        if(head.left != null){
+            next.offer(head.left);
+        }
+        if(head.right!= null){
+            next.offer(head.right);
+        }
+ 
+        if(current.isEmpty()){
+            current = next;
+            next = new LinkedList<TreeNode>();
+            result.add(numberList);
+            numberList = new ArrayList<Integer>();
+        }
+    }
+    return result;
+    }
+}
+	
+
