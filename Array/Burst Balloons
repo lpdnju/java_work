@@ -1,0 +1,41 @@
+/*Given n balloons, indexed from 0 to n-1. Each balloon is painted with a number on it represented by array nums. You are asked to burst all the balloons. If the you burst balloon i you will get nums[left] * nums[i] * nums[right] coins. Here left and right are adjacent indices of i. After the burst, the left and right then becomes adjacent.
+Find the maximum coins you can collect by bursting the balloons wisely.
+Note: 
+(1) You may imagine nums[-1] = nums[n] = 1. They are not real therefore you can not burst them.
+(2) 0 ≤ n ≤ 500, 0 ≤ nums[i] ≤ 100
+Example:
+Given [3, 1, 5, 8]
+Return 167
+    nums = [3,1,5,8] --> [3,5,8] -->   [3,8]   -->  [8]  --> []
+   coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167
+*/
+//思路: DP和DaC，dp[a,b,c,d,e,f]可以分为dp[a,b,c]和dp[c,d,e,f]再加上a*c*f来计算。用dp[i][j]来表示i到j的最大结果。
+public class Solution {
+    public int maxCoins(int[] nums) {
+        if(nums.length < 1){
+            return 0;
+        }
+        int[] balloons = new int[nums.length+2];
+        balloons[0] = 1;
+        balloons[nums.length+1] = 1;
+        for(int i = 1;i < balloons.length-1;i++){
+            balloons[i] = nums[i-1]; 
+        }
+        int[][] dp = new int[balloons.length][balloons.length];
+        return dac(balloons,dp,0,balloons.length-1);
+    }
+    public int dac(int[] balloons,int[][] dp, int begin,int end){
+        if(begin+1 >= end){
+            return 0;
+        }
+        if(dp[begin][end] > 0){
+            return dp[begin][end];
+        }
+        int res = 0;
+        for(int mid = begin+1; mid < end; mid++){
+            res = Math.max(res,balloons[begin]*balloons[mid]*balloons[end]+dac(balloons,dp,begin,mid)+dac(balloons,dp,mid,end));
+        }
+        dp[begin][end] = res;
+        return res;
+    }
+}
