@@ -1,0 +1,77 @@
+某寺庙里7个和尚:轮流挑水，为了和其他任务不能冲突，各人将有空天数列出如下表：
+和尚1: 星期二,四;
+和尚2: 星期一,六;
+和尚3: 星期三,日;
+和尚4: 星期五;
+和尚5: 星期一,四,六;
+和尚6: 星期二,五;
+和尚7: 星期三,六,日;
+请将所有合理的挑水时间安排表 
+
+//思路：利用DFS。
+package water;
+
+import java.util.*;
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(System.in);
+		int[][] in = new int[7][7];
+		for(int i = 0;i < 7;i++){
+			for(int j = 0;j < 7;j++){
+				in[i][j] = sc.nextInt();
+			}
+		}
+		
+		ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Integer> occupy = new ArrayList<Integer>();
+		
+		dfs(res,in,occupy,0);
+		System.out.println(res.size());
+		for(int i = 0;i < res.size();i++){
+			System.out.println((res.get(i).get(0)+1)+" "+(res.get(i).get(1)+1)+" "+
+								(res.get(i).get(2)+1)+" "+(res.get(i).get(3)+1)+" "+
+								(res.get(i).get(4)+1)+" "+(res.get(i).get(5)+1)+" "+
+								(res.get(i).get(6)+1));
+		}
+		//return;
+		
+		
+	}
+	public static void dfs(ArrayList<ArrayList<Integer>> res,int[][] in,ArrayList<Integer> occupy,int day){
+		System.out.println(" day is "+day);
+
+		if(day==6){
+			for(int i = 0;i < 7;i++){
+				if(in[i][day]==1){
+					if(!occupy.contains(i)){
+						occupy.add(i);
+						ArrayList<Integer> tmp = new ArrayList<Integer>(occupy);
+						//tmp.add(i);
+						res.add(tmp);
+						//System.out.println(res.size());
+						//dfs(res,in,occupy,day+1);
+						occupy.remove(occupy.size()-1);//一定要记得去掉，不然只会出一个正确的可能
+						
+						return;
+					}
+				}
+			}
+			return;
+		}else{
+			for(int i = 0;i < 7;i++){
+				if(in[i][day]==1){
+					if(!occupy.contains(i)){
+						//System.out.println("i is "+i+" day is "+day);
+						occupy.add(i);
+						dfs(res,in,occupy,day+1);
+						occupy.remove(occupy.size()-1);
+					}//如果不满足，千万不要return
+				}
+			}
+			return;
+		}
+	}
+
+}
