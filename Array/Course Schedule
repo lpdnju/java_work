@@ -1,0 +1,54 @@
+/*There are a total of n courses you have to take, labeled from 0 to n - 1.
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?
+For example:
+2, [[1,0]]
+There are a total of 2 courses to take. To take course 1 you should have finished course 0. So it is possible.
+2, [[1,0],[0,1]]
+There are a total of 2 courses to take. To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
+*/
+//思路：采用BFS，先找出所有不用先修一门其他的课的课程，加入一个que中，然后对每个que的元素A，找出他是否是哪一门B的先决课程，如果是的话，就先把这门课A修了，然后看看是否还满足修B的条件，如果是的话，就当修掉了B。这样的流程走完之后看看你修的课程是不是刚好的总课程数。
+public class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+ 
+    int len = prerequisites.length;
+ 
+    if(numCourses <1 || len < 1){
+        return true;
+    }
+ 
+    // 得出修每门课需要先修多少门科
+    int[] pCounter = new int[numCourses];
+    for(int i=0; i<len; i++){
+        pCounter[prerequisites[i][0]]++;
+    }
+ 
+    //存储没有先决课程的课
+    LinkedList<Integer> queue = new LinkedList<Integer>();
+    for(int i=0; i<numCourses; i++){
+        if(pCounter[i]==0){
+            queue.add(i);
+        }
+    }
+ 
+    // 没有先决课程的门数
+    int numNoPre = queue.size();
+ 
+    while(!queue.isEmpty()){
+        int top = queue.remove();
+        for(int i=0; i<len; i++){
+            // 如果有课的先决课程是它，就把它修了。
+            if(prerequisites[i][1]==top){
+                pCounter[prerequisites[i][0]]--;
+                if(pCounter[prerequisites[i][0]]==0){//如果这门课可以修了，则修它
+                    numNoPre++;
+                    queue.add(prerequisites[i][0]);
+                }
+            }
+        }
+    }
+ 
+    return numNoPre == numCourses;
+  } 
+
+}
