@@ -1,0 +1,30 @@
+/*Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+For example,
+[1,1,2] have the following unique permutations:
+[1,1,2], [1,2,1], and [2,1,1].
+Subscribe to see which companies asked this question
+*/
+//思路：与上题类似，不过用SET来保证不重复就好。
+代码：
+	public class Solution {
+	    public List<List<Integer>> permuteUnique(int[] nums) {
+	        List<List<Integer>> result = new ArrayList<List<Integer>>();
+	        
+	        List<Integer> tmp = new ArrayList<Integer>();
+	        result.add(tmp);
+	        
+	        for(int i = 0; i < nums.length; i++){
+	            HashSet<List<Integer>> curr = new HashSet<List<Integer>>();
+	            for(List<Integer> l : result){
+	                for(int j = 0; j <= l.size();j++){
+	                    l.add(j,nums[i]);
+	                    List<Integer> temp = new ArrayList<Integer>(l);
+	                    curr.add(temp);
+	                    l.remove(j);
+	                }
+	            }
+	            result = new ArrayList<List<Integer>>(curr);
+	        }
+	        return result;
+	    }
+	}
