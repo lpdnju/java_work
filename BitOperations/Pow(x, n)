@@ -1,0 +1,24 @@
+//Implement pow(x, n).
+
+//思路：判断n各个位上的1。
+public class Solution {
+    public double myPow(double x, int n) {
+        if(n == 0){
+            return 1;
+        }
+        if(n < 0){
+            x = 1/x;
+            n = -n;
+        }
+        double res = 1;
+        while(n > 0){
+            
+            if(n%2 == 1){
+                res *= x;
+            }
+            n >>= 1;
+            x *= x;
+        }
+        return res;
+    }
+}
